@@ -1,0 +1,133 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    ports:
+      - 5438:5432
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper1
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    hostname: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_CLEANER_DELETE_RETENTION_MS: 5000
+      KAFKA_BROKER_ID: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+
+  control-center:
+        image: confluentinc/cp-enterprise-control-center:7.0.0
+        hostname: control-center
+        container_name: control-center
+        depends_on:
+            - zookeeper
+            - broker
+            #- schema-registry
+        ports:
+            - 9021:9021
+        environment:
+            CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+            CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:32181'
+            #CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+            #CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+            #CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+            CONTROL_CENTER_REPLICATION_FACTOR: 1
+            CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+            CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+            CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+            PORT: 9021
+
+  connector:
+    image: debezium/connect:latest
+    container_name: kafka_connect_with_debezium
+    ports:
+      - 8083:8083
+    environment:
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: CONNECT_STATUSES
+      BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - zookeeper
+      - kafka
+      - postgres
+
+  seq:
+    image: "datalust/seq:2021"
+    hostname: seq
+    container_name: seq
+    ports:
+      - 5341:5341 # ingestion API
+      - 5555:80 # ui
+    environment:
+        ACCEPT_EULA: "Y"
+        
+
+  deals-service:
+    build: 
+      context: .
+      dockerfile: ./src/KafkaCDC.Deals/Dockerfile
+    image: dealsservice
+    container_name: deals-service
+    ports:
+      - 50050:80
+      - 50051:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80 
+    depends_on:
+      - postgres
+
+  traders-service:
+    build: 
+        context: .
+        dockerfile: ./src/KafkaCDC.Traders/Dockerfile
+    image: tradersservice
+    container_name: traders-service
+    ports:
+      - 50752:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80 
+    depends_on:
+      - postgres
+
+  notification-service:
+    build: 
+        context: .
+        dockerfile: ./src/KafkaCDC.Notificator/Dockerfile
+    image: notificationservice
+    ports:
+      - 50739:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:50739
+    container_name: notification-service
+    depends_on:
+      - postgres
+
+  
