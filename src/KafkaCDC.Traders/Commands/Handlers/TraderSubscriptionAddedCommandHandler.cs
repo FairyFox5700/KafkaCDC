@@ -28,7 +28,7 @@ namespace KafkaCDC.Traders.Commands.Handlers
             {
                 Id = Guid.NewGuid(),
                 AggregateId = request.DealId,
-                AggregateType = "DealSubscriptions",
+                AggregateType = "dealSubscriptions",
                 Type = "TraderSubscriptionAdded",
                 Payload = JsonSerializer.Serialize(dealSubscription)
             };

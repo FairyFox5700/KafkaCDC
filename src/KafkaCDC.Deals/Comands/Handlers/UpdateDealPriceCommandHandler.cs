@@ -33,7 +33,7 @@ namespace KafkaCDC.Deals.Comands.Handlers
             {
                 Id = Guid.NewGuid(),
                 AggregateId = deal.Id,
-                AggregateType = "Deal",
+                AggregateType = "deals",
                 Type = "DealUpdated",
                 Payload = JsonSerializer.Serialize(new DealUpdatedEvent(
                     deal.Id,

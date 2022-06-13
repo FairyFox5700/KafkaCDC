@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Mail;
 
 
-namespace KafkaCDC.Email
+namespace KafkaCDC.Notifications.Email
 {
     public static class AddFluentEmailDependency
     {

@@ -31,8 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="Events\Handlers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="KafkaCDC.Notifications.csproj" />
+    <None Include="KafkaCDC.Notifications.csproj.user" />
   </ItemGroup>
 
   <ItemGroup>

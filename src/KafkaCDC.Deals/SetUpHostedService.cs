@@ -49,7 +49,7 @@ namespace KafkaCDC.Deals
                     async () =>
                     {
                         var response = await httpClient.PutAsync(
-                            "http://connect:8083/connectors/outbox-connector/config",
+                            "http://connector:8083/connectors/outbox-connector/config",
                             new StringContent(
                                 File.ReadAllText("debezium_deals_config.json"),
                                 Encoding.UTF8,
@@ -58,7 +58,7 @@ namespace KafkaCDC.Deals
 
                         if (response.IsSuccessStatusCode)
                         {
-                            _logger.LogInformation(
+                            _logger.LogWarning(
                                 "Debezium outbox configured. Status code: {statusCode} Response: {response}",
                                 response.StatusCode, await response.Content.ReadAsStringAsync());
                         }

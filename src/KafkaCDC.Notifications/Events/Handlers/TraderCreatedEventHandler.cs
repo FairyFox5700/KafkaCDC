@@ -1,9 +1,9 @@
 ﻿using KafkaCDC.Common.Kafka;
-using KafkaCDC.Email;
+using KafkaCDC.Notifications.Email;
 
 using Newtonsoft.Json;
 
-namespace KafkaCDC.Notificator.Events.Handlers
+namespace KafkaCDC.Notifications.Events.Handlers
 {
     public class TraderCreatedEventHandler : IKafkaHandler<string, TraderCreatedEvent>
     {

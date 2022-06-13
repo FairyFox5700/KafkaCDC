@@ -32,7 +32,7 @@ namespace KafkaCDC.Traders.Data.Migration
                     AggregateId = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: true),
                     Payload = table.Column<string>(type: "text", nullable: true),
-                    DateOccurred = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Timestamp = table.Column<Int64>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {

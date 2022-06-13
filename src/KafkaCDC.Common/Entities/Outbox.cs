@@ -10,6 +10,6 @@
 
         public string? Payload { get; set; }
 
-        public DateTime DateOccurred { get; set; } = DateTime.UtcNow;
+        public Int64 Timestamp { get; set; } = DateTime.UtcNow.Ticks;
     }
 }

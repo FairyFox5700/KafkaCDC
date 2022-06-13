@@ -40,7 +40,6 @@ namespace KafkaCDC.Deals.Comands.Handlers
                 Id = Guid.NewGuid(),
             };
 
-            var all = await _dealDbContext.OutboxEvents.ToListAsync();
             var outboxEvent = new Outbox
             {
                 Id = Guid.NewGuid(),

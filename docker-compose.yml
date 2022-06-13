@@ -1,12 +1,11 @@
 version: '3.7'
 services:
   postgres:
-    image: postgres
+    image: debezium/postgres:13
     container_name: postgres
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: postgres
-    command: [ "postgres", "-c", "wal_level=logical" ]
     ports:
       - 5438:5432
 
@@ -30,13 +29,12 @@ services:
       - 29092:29092
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_LOG_CLEANER_DELETE_RETENTION_MS: 5000
       KAFKA_BROKER_ID: 1
-      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
   control-center:
         image: confluentinc/cp-enterprise-control-center:7.0.0
@@ -44,12 +42,12 @@ services:
         container_name: control-center
         depends_on:
             - zookeeper
-            - broker
+            - kafka
             #- schema-registry
         ports:
             - 9021:9021
         environment:
-            CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+            CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
             CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:32181'
             #CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
             #CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
@@ -70,7 +68,7 @@ services:
       CONFIG_STORAGE_TOPIC: my_connect_configs
       OFFSET_STORAGE_TOPIC: my_connect_offsets
       STATUS_STORAGE_TOPIC: CONNECT_STATUSES
-      BOOTSTRAP_SERVERS: kafka:29092
+      BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - zookeeper
       - kafka
@@ -98,9 +96,11 @@ services:
       - 50051:443
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80 
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DealConnection=Host=postgres;Port=5432;Database=kafkacdc.deals;User Id=postgres;Password=root;TrustServerCertificate=true
     depends_on:
       - postgres
+    
 
   traders-service:
     build: 
@@ -112,22 +112,22 @@ services:
       - 50752:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80 
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=kafkacdc.traders;User Id=postgres;Password=root;TrustServerCertificate=true 
     depends_on:
       - postgres
 
   notification-service:
     build: 
         context: .
-        dockerfile: ./src/KafkaCDC.Notificator/Dockerfile
+        dockerfile: ./src/KafkaCDC.Notifications/Dockerfile
     image: notificationservice
     ports:
       - 50739:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:50739
+      - ASPNETCORE_URLS=http://+:80
     container_name: notification-service
     depends_on:
       - postgres
-
   
