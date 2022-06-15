@@ -1,0 +1,275 @@
+{
+	"info": {
+		"_postman_id": "3e49fea4-d0f3-4c98-b7bd-7e13e28de2f0",
+		"name": "Kafka CDC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10967661"
+	},
+	"item": [
+		{
+			"name": "Traders",
+			"item": [
+				{
+					"name": "http://localhost:5071/",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"email\": \"ty@gmail.com\",\r\n    \"firstName\": \"ira\",\r\n    \"lastName\": \"tysh\",\r\n    \"address\": \"home\",\r\n    \"phoneNumber\": \"09721121\",\r\n    \"birthDate\": \"2022-05-24T13:22:25.667Z\",\r\n    \"gender\": \"female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5071/api/trader/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5071",
+							"path": [
+								"api",
+								"trader",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:50752/api/trader/subscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"traderId\": \"3ba3ce92-13bd-4e66-b1d9-4f1eebd6c136\",\r\n  \"dealId\": \"a3aae2ce-43e3-431d-a383-84ecec6a0dd0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:50752/api/trader/subscription",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "50752",
+							"path": [
+								"api",
+								"trader",
+								"subscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:50752/api/trader/subscription",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"traderId\": \"3ba3ce92-13bd-4e66-b1d9-4f1eebd6c136\",\r\n  \"dealId\": \"a3aae2ce-43e3-431d-a383-84ecec6a0dd0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:50752/api/trader/subscription",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "50752",
+							"path": [
+								"api",
+								"trader",
+								"subscription"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deals",
+			"item": [
+				{
+					"name": "/api/deal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"shortName\": \"test\",\r\n  \"dealType\": \"Equity\",\r\n  \"dealStatus\": \"Open\",\r\n  \"amount\": 12,\r\n  \"initialPriceRangeLow\": 10,\r\n  \"initialPriceRangeHigh\": 13,\r\n  \"revisedPriceRangeLow\": 14,\r\n  \"revisedPriceRangeHigh\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7156/api/deal",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7156",
+							"path": [
+								"api",
+								"deal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:50050/api/deal",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"a3aae2ce-43e3-431d-a383-84ecec6a0dd0\",\r\n  \"priceLow\": 12,\r\n  \"priceHigh\": 23\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:50050/api/deal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "50050",
+							"path": [
+								"api",
+								"deal"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "http://connector:8083/connectors/outbox-connector/config\"",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\r\n  \"tasks.max\": \"1\",\r\n  \"database.hostname\": \"postgres\",\r\n  \"database.port\": \"5432\",\r\n  \"database.user\": \"postgres\",\r\n  \"database.password\": \"root\",\r\n  \"database.dbname\": \"kafkacdc.traders\",\r\n  \"database.server.name\": \"postgres\",\r\n  \"schema.include.list\": \"public\",\r\n  \"table.include.list\": \"public.OutboxEvents\",\r\n  \"tombstones.on.delete\": \"false\",\r\n  \"transforms\": \"outbox\",\r\n  \"transforms.outbox.type\": \"io.debezium.transforms.outbox.EventRouter\",\r\n   \"slot.name\": \"debezium2\",\r\n  \"transforms.outbox.table.field.event.id\": \"Id\",\r\n  \"transforms.outbox.table.field.event.key\": \"AggregateId\",\r\n  \"transforms.outbox.table.field.event.timestamp\": \"Timestamp\",\r\n  \"transforms.outbox.table.field.event.payload\": \"Payload\",\r\n  \"transforms.outbox.route.by.field\": \"AggregateType\",\r\n  \"transforms.outbox.route.topic.replacement\": \"bookstore.events\",\r\n  \"transforms.outbox.table.fields.additional.placement\": \"Type:header:eventType\",\r\n  \"transforms.outbox.debezium.expand.json.payload\": \"true\",\r\n  \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n  \"value.converter.schemas.enable\": false,\r\n  \"plugin.name\": \"pgoutput\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/outbox-connector/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"outbox-connector",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8083/connectors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8083/connectors",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors/outbox-connector",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"outbox-connector"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8083/connectors?expand=info&expand=status",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "http://connect:8083/connectors/traders.outbox-connector/config",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\r\n  \"tasks.max\": \"1\",\r\n  \"database.hostname\": \"postgres\",\r\n  \"database.port\": \"5432\",\r\n  \"database.user\": \"postgres\",\r\n  \"database.password\": \"root\",\r\n  \"database.dbname\": \"kafkacdc.traders\",\r\n  \"database.server.name\": \"postgres\",\r\n  \"schema.include.list\": \"public\",\r\n  \"table.include.list\": \"public.OutboxEvents\",\r\n  \"tombstones.on.delete\": \"false\",\r\n  \"transforms\": \"outbox\",\r\n  \"transforms.outbox.type\": \"io.debezium.transforms.outbox.EventRouter\",\r\n  \"transforms.outbox.table.field.event.id\": \"Id\",\r\n  \"transforms.outbox.table.field.event.key\": \"AggregateId\",\r\n  \"transforms.outbox.table.field.event.payload\": \"Payload\",\r\n  \"transforms.outbox.route.by.field\": \"AggregateType\",\r\n  \"transforms.outbox.route.topic.replacement\": \"${routedByValue}.events\",\r\n   \"slot.name\": \"debezium11\",\r\n  \"transforms.outbox.table.fields.additional.placement\": \"Type:header:eventType\",\r\n  \"transforms.outbox.debezium.expand.json.payload\": \"true\",\r\n  \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n  \"value.converter.schemas.enable\": false,\r\n  \"plugin.name\": \"pgoutput\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/traders.outbox-connector/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"traders.outbox-connector",
+						"config"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
