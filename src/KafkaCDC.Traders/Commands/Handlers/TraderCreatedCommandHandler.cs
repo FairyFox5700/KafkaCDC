@@ -22,6 +22,7 @@ namespace KafkaCDC.Traders.Commands.Handlers
         {
             var trader = new Trader()
             {
+                Id= Guid.NewGuid(),
                 Address = request.Address,
                 Email = request.Email,
                 BirthDate = request.BirthDate,

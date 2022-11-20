@@ -1,6 +1,6 @@
 ﻿namespace KafkaCDC.Traders.Events
 {
-    public record DealUpdatedEvent(
+    public record DealPriceChangedEvent(
         Guid Id,
         decimal? RevisedPriceRangeLow,
         decimal? RevisedPriceRangeHigh)

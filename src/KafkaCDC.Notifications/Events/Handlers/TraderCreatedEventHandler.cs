@@ -27,9 +27,10 @@ namespace KafkaCDC.Notifications.Events.Handlers
 
             await _emailService.SendMessage(new MailModel()
             {
+                FromEmail = "admin@gmail.com",
                 Subject = "Hi",
                 ToEmail = value.Email,
-                Body = $"Welcome in our system {value.FirstName} +{value.LastName}",
+                Body = $"Welcome in our system {value.FirstName} {value.LastName}",
             });
         }
     }

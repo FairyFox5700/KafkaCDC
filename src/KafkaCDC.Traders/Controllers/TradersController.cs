@@ -25,7 +25,7 @@ namespace KafkaCDC.Traders.Controllers
             => Ok(await _mediator.Send(command));
 
         [HttpPut("suscription")]
-        public async Task<ActionResult> AddTrader([FromBody] TraderSubscriptionChangedCommand command)
+        public async Task<ActionResult> UpdateSubscription([FromBody] TraderSubscriptionChangedCommand command)
             => Ok(await _mediator.Send(command));
     }
 }

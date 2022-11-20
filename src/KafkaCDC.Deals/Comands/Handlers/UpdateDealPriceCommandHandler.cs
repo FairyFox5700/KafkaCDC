@@ -2,7 +2,6 @@
 
 using KafkaCDC.Common.Entities;
 using KafkaCDC.Deals.Data;
-using KafkaCDC.Deals.Domain;
 using KafkaCDC.Deals.Events;
 
 using MediatR;

@@ -8,37 +8,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KafkaCDC.Traders.Events.Handlers
 {
-    public class DealUpdatedEventHandlers : IKafkaHandler<string, DealUpdatedEvent>
+    public class DealPriceChangedEventHandlers : IKafkaHandler<string, DealPriceChangedEvent>
     {
 
         private readonly TradersDbContext _dbContext;
 
-        public DealUpdatedEventHandlers(TradersDbContext dbContext)
+        public DealPriceChangedEventHandlers(TradersDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task HandleAsync(string key, DealUpdatedEvent value)
+        public async Task HandleAsync(string key, DealPriceChangedEvent value)
         {
             var subscribedTraderEmails = await (from subscription in _dbContext.DealSubscriptions
                                                 join trader in _dbContext.Traders
                                                     on subscription.TraderId equals trader.Id
                                                 where subscription.DealId == value.Id
                                                 select trader.Email).ToListAsync();
-
             var outboxEvent = new Outbox
             {
                 Id = Guid.NewGuid(),
                 AggregateId = value.Id,
                 AggregateType = "subscriptions",
                 Type = "DealSubscriptionUpdated",
-                Payload = JsonSerializer.Serialize(new DealSubscribedTradersUpdatedEvent
-                {
-                    RevisedPriceRangeHigh = value.RevisedPriceRangeHigh,
-                    DealId = value.Id,
-                    RevisedPriceRangeLow = value.RevisedPriceRangeLow,
-                    EmailsList = subscribedTraderEmails.ToList(),
-                })
+                Payload = JsonSerializer.Serialize(new DealSubscribedTradersUpdatedEvent(
+                subscribedTraderEmails.ToList(),
+                value.Id,
+                value.RevisedPriceRangeLow,
+                value.RevisedPriceRangeHigh))
             };
 
             await _dbContext.OutboxEvents.AddAsync(outboxEvent);

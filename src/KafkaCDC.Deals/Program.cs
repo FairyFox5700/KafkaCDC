@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.WebHost.UseUrls("http://*:8080");
 builder.Services.AddMediatR(typeof(AddDealCommand).GetTypeInfo().Assembly);
 
 builder.Services.AddControllers();

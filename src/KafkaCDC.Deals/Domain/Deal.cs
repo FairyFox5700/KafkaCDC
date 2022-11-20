@@ -4,7 +4,7 @@ namespace KafkaCDC.Deals.Domain
 {
     public class Deal : BaseEntity
     {
-        public string ShortName { get; set; }
+        public string? ShortName { get; set; }
         public DealType? DealType { get; set; }
 
         public DealStatus? DealStatus { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -31,7 +30,8 @@ namespace KafkaCDC.Common.Kafka
 
             var handler = scope.ServiceProvider.GetRequiredService<IKafkaHandler<TKey, TValue>>();
 
-            var builder = new ConsumerBuilder<TKey, TValue>(_config).SetValueDeserializer(new KafkaDeserializer<TValue>()!);
+            var builder = new ConsumerBuilder<TKey, TValue>(_config)
+                        .SetValueDeserializer(new KafkaDeserializer<TValue>()!);
 
             using IConsumer<TKey, TValue> consumer = builder.Build();
 

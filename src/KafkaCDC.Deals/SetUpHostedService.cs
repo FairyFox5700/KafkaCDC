@@ -49,7 +49,7 @@ namespace KafkaCDC.Deals
                     async () =>
                     {
                         var response = await httpClient.PutAsync(
-                            "http://connector:8083/connectors/outbox-connector/config",
+                            "http://localhost:8083/connectors/outbox-connector/config",
                             new StringContent(
                                 File.ReadAllText("debezium_deals_config.json"),
                                 Encoding.UTF8,

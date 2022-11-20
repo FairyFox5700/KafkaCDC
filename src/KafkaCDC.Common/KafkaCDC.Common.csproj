@@ -20,8 +20,6 @@
 		<PackageReference Include="Convey.HTTP" Version="1.0.531" />
 		<PackageReference Include="Convey.MessageBrokers" Version="1.0.531" />
 		<PackageReference Include="Convey.MessageBrokers.Outbox" Version="1.0.531" />
-		<PackageReference Include="FluentEmail.Core" Version="3.0.2" />
-		<PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">

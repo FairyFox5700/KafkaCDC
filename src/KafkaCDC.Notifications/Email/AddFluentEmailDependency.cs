@@ -5,7 +5,7 @@ using System.Net.Mail;
 
 namespace KafkaCDC.Notifications.Email
 {
-    public static class AddFluentEmailDependency
+    public static class AddEmailDependency
     {
         public static IServiceCollection AddFluentEmailServices(this IServiceCollection services, IConfiguration configuration)
         {
@@ -13,13 +13,6 @@ namespace KafkaCDC.Notifications.Email
             configuration.GetSection(nameof(EmailSettings)).Bind(emailSettings);
 
             services.AddSingleton(emailSettings);
-            services.AddFluentEmail(emailSettings.AdminEmail)
-                .AddSmtpSender(new SmtpClient(emailSettings.MailServer, emailSettings.MailPort)
-                {
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(emailSettings.AdminEmail, emailSettings.AdminPassword),
-                    EnableSsl = true,
-                });
             services.AddScoped<IEmailService, EmailService>();
             return services;
         }

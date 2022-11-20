@@ -1,10 +1,9 @@
 ﻿using KafkaCDC.Common.Kafka;
 using KafkaCDC.Notifications.Email;
-using KafkaCDC.Notifications.Events;
 
 namespace KafkaCDC.Notifications.Events.Handlers
 {
-    internal class DealSubscribedTradersUpdatedEventHandler : IKafkaHandler<string, DealSubscribedTradersUpdatedEvent>
+    public class DealSubscribedTradersUpdatedEventHandler : IKafkaHandler<string, DealSubscribedTradersUpdatedEvent>
     {
         private readonly IEmailService _emailService;
         private readonly ILogger<DealSubscribedTradersUpdatedEventHandler> _logger;
@@ -26,6 +25,7 @@ namespace KafkaCDC.Notifications.Events.Handlers
                     _logger.LogWarning(email);
                     taskList.Add(_emailService.SendMessage(new MailModel()
                     {
+                        FromEmail = "admin@gmail.com",
                         ToEmail = email,
                         Subject = "Deal price changed",
                         Body = $"Deal: {value.DealId}. Changed low price: {value.RevisedPriceRangeLow}." +

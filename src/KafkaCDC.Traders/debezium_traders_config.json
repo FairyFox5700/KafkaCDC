@@ -17,6 +17,7 @@
   "transforms.outbox.table.field.event.payload": "Payload",
   "transforms.outbox.route.by.field": "AggregateType",
   "transforms.outbox.route.topic.replacement": "${routedByValue}.events",
+  "slot.name": "debezium11",
   "transforms.outbox.table.fields.additional.placement": "Type:header:eventType",
   "transforms.outbox.debezium.expand.json.payload": "true",
   "value.converter": "org.apache.kafka.connect.json.JsonConverter",

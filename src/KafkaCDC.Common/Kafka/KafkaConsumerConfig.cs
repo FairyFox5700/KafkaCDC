@@ -12,4 +12,5 @@ namespace KafkaCDC.Common.Kafka
             EnableAutoOffsetStore = false;
         }
     }
+
 }
