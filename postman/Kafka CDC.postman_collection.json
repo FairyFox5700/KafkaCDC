@@ -46,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"traderId\": \"3ba3ce92-13bd-4e66-b1d9-4f1eebd6c136\",\r\n  \"dealId\": \"a3aae2ce-43e3-431d-a383-84ecec6a0dd0\"\r\n}",
+							"raw": "{\r\n  \"traderId\": \"f14490e4-0410-4d44-a2c5-9274167ceb2a\",\r\n  \"dealId\": \"7d5f0271-37c3-4586-9481-6e7f302ee405\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -111,7 +111,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"shortName\": \"test\",\r\n  \"dealType\": \"Equity\",\r\n  \"dealStatus\": \"Open\",\r\n  \"amount\": 12,\r\n  \"initialPriceRangeLow\": 10,\r\n  \"initialPriceRangeHigh\": 13,\r\n  \"revisedPriceRangeLow\": 14,\r\n  \"revisedPriceRangeHigh\": 15\r\n}",
+							"raw": "{\r\n    \"id\":\"\",\r\n    \"shortName\": \"swr576skj6\",\r\n    \"dealType\": \"Equity\",\r\n    \"dealStatus\": \"Open\",\r\n    \"amount\": 12,\r\n    \"initialPriceRangeLow\": 10,\r\n    \"initialPriceRangeHigh\": 13,\r\n    \"revisedPriceRangeLow\": 14,\r\n    \"revisedPriceRangeHigh\": 15\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -119,12 +119,12 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7156/api/deal",
-							"protocol": "https",
+							"raw": "http://localhost:5206/api/deal",
+							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "7156",
+							"port": "5206",
 							"path": [
 								"api",
 								"deal"
@@ -171,7 +171,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\r\n  \"tasks.max\": \"1\",\r\n  \"database.hostname\": \"postgres\",\r\n  \"database.port\": \"5432\",\r\n  \"database.user\": \"postgres\",\r\n  \"database.password\": \"root\",\r\n  \"database.dbname\": \"kafkacdc.traders\",\r\n  \"database.server.name\": \"postgres\",\r\n  \"schema.include.list\": \"public\",\r\n  \"table.include.list\": \"public.OutboxEvents\",\r\n  \"tombstones.on.delete\": \"false\",\r\n  \"transforms\": \"outbox\",\r\n  \"transforms.outbox.type\": \"io.debezium.transforms.outbox.EventRouter\",\r\n   \"slot.name\": \"debezium2\",\r\n  \"transforms.outbox.table.field.event.id\": \"Id\",\r\n  \"transforms.outbox.table.field.event.key\": \"AggregateId\",\r\n  \"transforms.outbox.table.field.event.timestamp\": \"Timestamp\",\r\n  \"transforms.outbox.table.field.event.payload\": \"Payload\",\r\n  \"transforms.outbox.route.by.field\": \"AggregateType\",\r\n  \"transforms.outbox.route.topic.replacement\": \"bookstore.events\",\r\n  \"transforms.outbox.table.fields.additional.placement\": \"Type:header:eventType\",\r\n  \"transforms.outbox.debezium.expand.json.payload\": \"true\",\r\n  \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n  \"value.converter.schemas.enable\": false,\r\n  \"plugin.name\": \"pgoutput\"\r\n}",
+					"raw": "{\r\n  \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\r\n  \"tasks.max\": \"1\",\r\n  \"database.hostname\": \"postgres\",\r\n  \"database.port\": \"5432\",\r\n  \"database.user\": \"postgres\",\r\n  \"database.password\": \"root\",\r\n  \"database.dbname\": \"kafkacdc.deals\",\r\n  \"topic.prefix\":\"\",\r\n  \"database.server.name\": \"postgres\",\r\n  \"schema.include.list\": \"public\",\r\n  \"table.include.list\": \"public.OutboxEvents\",\r\n  \"tombstones.on.delete\": \"false\",\r\n  \"transforms\": \"outbox\",\r\n  \"transforms.outbox.type\": \"io.debezium.transforms.outbox.EventRouter\",\r\n  \"slot.name\": \"debezium10\",\r\n  \"transforms.outbox.table.field.event.id\": \"Id\",\r\n  \"transforms.outbox.table.field.event.key\": \"AggregateId\",\r\n \r\n  \"transforms.outbox.table.field.event.payload\": \"Payload\",\r\n  \"transforms.outbox.route.by.field\": \"AggregateType\",\r\n  \"transforms.outbox.route.topic.replacement\": \"${routedByValue}.events\",\r\n  \"transforms.outbox.table.fields.additional.placement\": \"Type:header:eventType\",\r\n  \"transforms.outbox.debezium.expand.json.payload\": \"true\",\r\n  \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n  \"value.converter.schemas.enable\": false,\r\n  \"plugin.name\": \"pgoutput\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -214,6 +214,14 @@
 			"response": []
 		},
 		{
+			"name": "http://localhost:8083/connectors?expand=info&expand=status",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
 			"name": "http://localhost:8083/connectors",
 			"request": {
 				"method": "DELETE",
@@ -230,14 +238,6 @@
 						"outbox-connector"
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:8083/connectors?expand=info&expand=status",
-			"request": {
-				"method": "GET",
-				"header": []
 			},
 			"response": []
 		},
