@@ -146,3 +146,18 @@ Debezium connector now will stream events to subscribers from outbox tables.
 First it will create topics in kafka and stream payload to appropriate topic based on configuration defined above.
 ![image](https://user-images.githubusercontent.com/46414904/202933343-dde2dbc6-58e8-4e56-888b-f6a18adc3943.png)
 
+Notification service subscribed to traders.events topic and will send welcomw email to a new trader in system.
+![image](https://user-images.githubusercontent.com/46414904/202983856-8e8816d9-8061-467d-817a-a8a182af078b.png)
+
+In case of deal price change:
+```json
+{
+  "id": "48a716d1-20bc-418b-8507-feaf95282a46",
+  "priceLow": 12,
+  "priceHigh": 23
+}
+```
+The information about chnage will be recorded to outbox table and all subscribed traders will receaive an email with price update:
+![image](https://user-images.githubusercontent.com/46414904/202984272-1b9c03fa-631e-4089-bdc3-057cf4931941.png)
+
+
